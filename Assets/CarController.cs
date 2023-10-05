@@ -25,7 +25,7 @@ public class CarController : MonoBehaviour
     [Header("Steering Control")]
     [Range(0.0f, 1.0f)]
     public float gripFactor;
-
+    [Range(0.0f, 1.0f)]
     public float tireMass;
     public float steeringSpeed;
     public float maxSteeringAngle = 50;
@@ -128,7 +128,6 @@ public class CarController : MonoBehaviour
         Debug.DrawRay(transform.position, transform.up * (velocity), Color.green);          //draw force enacting upwards
         Debug.DrawRay(transform.position, transform.up * (offset), Color.yellow);        //ray pointing downwards
     }
-
     void Steering()
     {
         //spring force worldspace

@@ -47,9 +47,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebfdfa4f0951694ab472585c46ee2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carTransform: {fileID: 0}
   carRigidbody: {fileID: 0}
   tyre: {fileID: 415597850228910899}
   steering: 1
+  accelSpeed: 0
+  carTopSpeed: 0
+  powerCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   restDistance: 0.7
   springStrength: 20
   springDamper: 3
@@ -308,7 +317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8149374671491436815
 RectTransform:
   m_ObjectHideFlags: 0
