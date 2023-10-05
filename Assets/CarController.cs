@@ -70,7 +70,7 @@ public class CarController : MonoBehaviour
             Suspension(); //seems ok
             Acceleration(); //clear
             Steering(); //broke -- would ramp up like crazy
-            Debug.Log("grounded: " + grounded);
+            //Debug.Log("grounded: " + grounded);
         }
         else                                                                                    //if not touching
         {
@@ -89,16 +89,31 @@ public class CarController : MonoBehaviour
             //current forward speed of the car (in the driven direction)
             float carSpeed = Vector3.Dot(carTransform.forward, carRigidbody.velocity);
 
-            //normalize car speed
+            //normalize car speed                        0 - 100+         ???
             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / carTopSpeed);
 
-            //available torque
+            //how much to add?
+            //available torque                              0 - 1            0 - 1
             float availableTorque = powerCurve.Evaluate(normalizedSpeed) * gasInput; //look into their power curve stuff
 
+            //apply force                    forward       
             carRigidbody.AddForceAtPosition(accelDir * availableTorque, transform.position);
 
             Debug.DrawRay(transform.position, transform.forward * normalizedSpeed, Color.blue);
 
+            Debug.Log("car speed: " + normalizedSpeed);
+            Debug.Log("available torque: " + availableTorque);
+
+        }
+
+        if (gasInput < 0.0f)
+        { 
+            //reverse or slow
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        { 
+            //when held down begin slowing down
         }
 
         Debug.DrawRay(transform.position, transform.forward * 1, Color.blue);
