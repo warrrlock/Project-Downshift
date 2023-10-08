@@ -52,6 +52,7 @@ MonoBehaviour:
   tyre: {fileID: 415597850228910899}
   steering: 1
   accelSpeed: 0
+  brakePressure: 0
   carTopSpeed: 0
   powerCurve:
     serializedVersion: 2
@@ -65,8 +66,16 @@ MonoBehaviour:
   gripFactor: 0.5
   tireMass: 0.3
   steeringSpeed: 200
+  steerScale: 0
+  steerLerp: 0
   maxSteeringAngle: 50
   minSteeringAngle: -50
+  steerCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   steerAngleText: {fileID: 4277708728260021714}
 --- !u!114 &3361132521374040927
 MonoBehaviour:

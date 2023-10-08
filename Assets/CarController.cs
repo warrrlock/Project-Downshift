@@ -14,6 +14,7 @@ public class CarController : MonoBehaviour
 
     [Header("Acceleration Control")]
     public float accelSpeed;
+    public float brakePressure;
     public float carTopSpeed;
     public AnimationCurve powerCurve;
 
@@ -28,13 +29,18 @@ public class CarController : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float tireMass;
     public float steeringSpeed;
+    public float steerScale;
+    public float steerLerp;
     public float maxSteeringAngle = 50;
     public float minSteeringAngle = -50;
+    public AnimationCurve steerCurve;
 
     public TMP_Text steerAngleText;
 
     private float steeringRotation;
+    private float currentHorizontalInput;
     private float gasInput;
+    private float brakeInput;
 
     bool grounded;
     RaycastHit hit;
@@ -50,15 +56,33 @@ public class CarController : MonoBehaviour
     {
         ShootRaycast();
 
-        steeringRotation = Input.GetAxis("Horizontal") * (steeringSpeed);
-        gasInput = Input.GetAxis("Vertical") * accelSpeed;
-        
-        float steerRot = Mathf.Clamp(steeringRotation, minSteeringAngle, maxSteeringAngle);
+        gasInput = Input.GetAxis("Accelerate") * accelSpeed;
+        brakeInput = Input.GetAxis("Brake") * accelSpeed;
 
-        //transform.Rotate(0, (steeringRotation), 0);
-        transform.localRotation = Quaternion.Euler(0, (steerRot), 0);
+        float steeringInput = Input.GetAxisRaw("Horizontal");                                                   //get horizontal axi 0-1
 
-        steerAngleText.text = "angle: " + (steerRot);
+        //float normalizedInput = Mathf.Clamp(steeringInput, -1f, 1f);
+
+        float curveEval = steerCurve.Evaluate(Mathf.Abs(steeringInput));                                        //ie. if steering is 0.5 - curveEval = 0.6
+        //consider remapping curve bc of -1
+        //float remapCurveEval = (curveEval - 0.5f) * 2;
+
+        currentHorizontalInput = Mathf.Lerp(currentHorizontalInput, steeringInput, steerLerp * Time.deltaTime); //currentHorizontalInput will reach steering Input
+                                   //0.6                25     = 15   *     0.6     = 9     
+        float steerRot = currentHorizontalInput * (steeringSpeed);                       //suppose chi = 0.6 and steerSpd = 25. 
+                
+        steerRot = Mathf.Clamp(steerRot, minSteeringAngle, maxSteeringAngle);
+
+
+        transform.localRotation = Quaternion.Euler(0f, steerRot, 0f);                                   //apply value to localRotation
+
+        steerAngleText.text = "angle: " + (Mathf.Round(steerRot * 1000f) / 1000f);
+        Debug.Log("curve eval: " + curveEval);
+        Debug.Log("raw input: " + steeringInput);
+        //get input
+        //evaluate curve value
+        //clamp value
+        //set value to rotation
 
     }
 
@@ -76,7 +100,6 @@ public class CarController : MonoBehaviour
         {
             grounded = false;
         }
-
     }
     void Acceleration()
     {
@@ -86,7 +109,7 @@ public class CarController : MonoBehaviour
         //acceleration torque
         if (gasInput > 0.0f)
         {
-            //current forward speed of the car (in the driven direction)
+            //getting current forward speed of the car (in the driven direction)
             float carSpeed = Vector3.Dot(carTransform.forward, carRigidbody.velocity);
 
             //normalize car speed                        0 - 100+         ???
@@ -102,13 +125,14 @@ public class CarController : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * normalizedSpeed, Color.blue);
 
             Debug.Log("car speed: " + normalizedSpeed);
-            Debug.Log("available torque: " + availableTorque);
+            //Debug.Log("available torque: " + availableTorque);
 
         }
 
-        if (gasInput < 0.0f)
+        if (brakeInput > 0.0f)
         { 
             //reverse or slow
+
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
