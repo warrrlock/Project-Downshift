@@ -311,7 +311,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Brake
-    descriptiveName: 
+    descriptiveName: Pad
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: 
@@ -324,5 +324,21 @@ InputManager:
     invert: 0
     type: 2
     axis: 8
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Brake
+    descriptiveName: Keyboard
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: s
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.001
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
     joyNum: 0
   m_UsePhysicalKeys: 0

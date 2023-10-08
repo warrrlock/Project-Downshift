@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
-public class CarController : MonoBehaviour
+
+public class WheelControl : MonoBehaviour
 {
     public Transform carTransform;
     public Rigidbody carRigidbody;
@@ -14,7 +14,7 @@ public class CarController : MonoBehaviour
 
     [Header("Acceleration Control")]
     public float accelSpeed;
-    public float brakePressure;
+    public float brakeForce;
     public float carTopSpeed;
     public AnimationCurve powerCurve;
 
@@ -37,27 +37,19 @@ public class CarController : MonoBehaviour
 
     public TMP_Text steerAngleText;
 
-    private float steeringRotation;
     private float currentHorizontalInput;
     private float gasInput;
     private float brakeInput;
+    private float speedInKmh;
 
     bool grounded;
     RaycastHit hit;
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
     void FixedUpdate()
     {
         ShootRaycast();
 
         gasInput = Input.GetAxis("Accelerate") * accelSpeed;
-        brakeInput = Input.GetAxis("Brake") * accelSpeed;
+        brakeInput = Input.GetAxis("Brake") * brakeForce;
 
         float steeringInput = Input.GetAxisRaw("Horizontal");                                                   //get horizontal axi 0-1
 
@@ -77,13 +69,8 @@ public class CarController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0f, steerRot, 0f);                                   //apply value to localRotation
 
         steerAngleText.text = "angle: " + (Mathf.Round(steerRot * 1000f) / 1000f);
-        Debug.Log("curve eval: " + curveEval);
-        Debug.Log("raw input: " + steeringInput);
-        //get input
-        //evaluate curve value
-        //clamp value
-        //set value to rotation
-
+        //Debug.Log("curve eval: " + curveEval);
+        //Debug.Log("raw input: " + steeringInput);
     }
 
     void ShootRaycast()
@@ -116,22 +103,31 @@ public class CarController : MonoBehaviour
             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / carTopSpeed);
 
             //how much to add?
-            //available torque                              0 - 1            0 - 1
+            //available torque                                       
             float availableTorque = powerCurve.Evaluate(normalizedSpeed) * gasInput; //look into their power curve stuff
 
             //apply force                    forward       
             carRigidbody.AddForceAtPosition(accelDir * availableTorque, transform.position);
 
-            Debug.DrawRay(transform.position, transform.forward * normalizedSpeed, Color.blue);
+            Debug.DrawRay(transform.position, transform.forward * availableTorque, Color.blue);
 
-            Debug.Log("car speed: " + normalizedSpeed);
+            //debugging speed values
+            speedInKmh = normalizedSpeed * carTopSpeed * 3.6f;
+
+            //Debug.Log("car speed: " + speedInKmh.ToString("F2") + "km/h");
             //Debug.Log("available torque: " + availableTorque);
+            //Debug.Log("car speed normalized: " + normalizedSpeed);
 
         }
 
         if (brakeInput > 0.0f)
-        { 
+        {
             //reverse or slow
+            float carSpeed = Vector3.Dot(carTransform.forward, carRigidbody.velocity);
+
+            float brakePressure = brakeInput;
+
+            carRigidbody.AddForceAtPosition(-accelDir * brakePressure, transform.position); //apply brakes
 
         }
 
