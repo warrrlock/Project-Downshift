@@ -9,7 +9,7 @@ public class LapManager : MonoBehaviour
     private int currentLap = 0;
 
     public TMP_Text lapText;
-    public TMP_Text finishText;
+    public GameObject finishText;
 
     private void Start()
     {
@@ -48,7 +48,8 @@ public class LapManager : MonoBehaviour
 
     private void ShowFinishText()
     {
-        finishText.IsActive();
+        Debug.Log("Finished");
+        finishText.SetActive(true);
     }
 
 }

@@ -29,7 +29,6 @@ public class WheelControl : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float tireMass;
     public float steeringSpeed;
-    public float steerScale;
     public float steerLerp;
     public float maxSteeringAngle = 50;
     public float minSteeringAngle = -50;

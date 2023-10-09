@@ -31,7 +31,7 @@ public class CarParent : MonoBehaviour
 		driftOffset = Vector3.Dot(carRb.GetPointVelocity(transform.position).normalized, carRb.transform.right.normalized);
 
 		//text displays
-		//carSpeedText.text = "Speed (km/h): " + 
+		carSpeedText.text = "Speed: " + (carRb.velocity.magnitude * 3.6f).ToString("F2") + "km/h";
 		driftOffsetText.text = "Drift Offset: " + (Mathf.Round(driftOffset * 1000f) / 1000f);
 		//Debug.Log("speed(carparent): " + carRb.velocity.magnitude);
     }
