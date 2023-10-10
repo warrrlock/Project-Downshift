@@ -5,8 +5,11 @@ using TMPro;
 
 public class LapManager : MonoBehaviour
 {
-    public int totalLaps = 3;
+    public int totalLaps = 10;
+
     private int currentLap = 0;
+    private float lapTime;
+    private float startTime;
 
     public TMP_Text lapText;
     public GameObject finishText;
@@ -14,6 +17,11 @@ public class LapManager : MonoBehaviour
     private void Start()
     {
         UpdateLapText();
+    }
+
+    private void Update()
+    {
+        lapTime += Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
