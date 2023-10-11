@@ -33,6 +33,7 @@ public class WheelControl : MonoBehaviour
     public float maxSteeringAngle = 50;
     public float minSteeringAngle = -50;
     public AnimationCurve steerCurve;
+    public AnimationCurve stiffnessCurve;
 
     public TMP_Text steerAngleText;
 
@@ -58,9 +59,20 @@ public class WheelControl : MonoBehaviour
         //consider remapping curve bc of -1
         //float remapCurveEval = (curveEval - 0.5f) * 2;
 
+        //steering stiffness on high speed
+        //get the magnitude of the car velocity: carRigidbody.velocity.magnitude
+        //normalize it to 0-1f
+        //setup a curve where x = normalizeCarVelocity and y = appliedStiffness
+        //this results in a stifness factor that gets multiplied onto the steering speed.
+        float carVel = carRigidbody.velocity.magnitude;
+        float normalizedCarVel = Mathf.Clamp01(carVel / carTopSpeed);
+        //Debug.Log("normalizedCarVel: " + normalizedCarVel);
+        float appliedStiffness = stiffnessCurve.Evaluate(Mathf.Abs(normalizedCarVel));
+        Debug.Log("appliedStiffness: " + appliedStiffness);
+
         currentHorizontalInput = Mathf.Lerp(currentHorizontalInput, steeringInput, steerLerp * Time.deltaTime); //currentHorizontalInput will reach steering Input
                                    //0.6                25     = 15   *     0.6     = 9     
-        float steerRot = currentHorizontalInput * (steeringSpeed);                       //suppose chi = 0.6 and steerSpd = 25. 
+        float steerRot = currentHorizontalInput * steeringSpeed * appliedStiffness;                       //suppose chi = 0.6 and steerSpd = 25. 
                 
         steerRot = Mathf.Clamp(steerRot, minSteeringAngle, maxSteeringAngle);
 
@@ -69,6 +81,7 @@ public class WheelControl : MonoBehaviour
 
         steerAngleText.text = "angle: " + (Mathf.Round(steerRot * 1000f) / 1000f);
         //Debug.Log("curve eval: " + curveEval);
+        Debug.Log("steer rot: " + steerRot);
         //Debug.Log("raw input: " + steeringInput);
     }
 
