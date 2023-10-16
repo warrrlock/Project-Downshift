@@ -79,7 +79,7 @@ public class WheelControl : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(0f, steerRot, 0f);                                   //apply value to localRotation
 
-        steerAngleText.text = "angle: " + (Mathf.Round(steerRot * 1000f) / 1000f);
+       // steerAngleText.text = "angle: " + (Mathf.Round(steerRot * 1000f) / 1000f);
         //Debug.Log("curve eval: " + curveEval);
         Debug.Log("steer rot: " + steerRot);
         //Debug.Log("raw input: " + steeringInput);

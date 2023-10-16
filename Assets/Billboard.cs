@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    public Transform textMeshTransform;
+    public Transform currentCam;
     void Update()
     {
-        textMeshTransform.rotation = Quaternion.LookRotation(textMeshTransform.position - Camera.main.transform.position);
+        transform.LookAt(currentCam);
+
+        Vector3 eulerAngles = transform.rotation.eulerAngles;
+        eulerAngles.x = 0;
+        eulerAngles.z = 0;
+        transform.rotation = Quaternion.Euler(eulerAngles);
     }
-    
+
 }

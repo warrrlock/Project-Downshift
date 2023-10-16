@@ -10,7 +10,7 @@ public class LapManager : MonoBehaviour
     public float prevLapTime;
     public float fastestLap = float.MaxValue;
 
-    private int currentLap = -1;
+    private int currentLap = 0;
 
     private float startTime;
 
